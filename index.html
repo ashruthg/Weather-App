@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/8e315cc38d.js" crossorigin="anonymous"></script> <!-- Font Awesome CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" /> <!-- Google Fonts Icons CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"> <!--Google Fonts-->
+</head>
+<body>
+    <!--main contianer-->
+    <div class="weather-bg-container">
+        <!--container holding the background image-->
+        <div class="weather-inner-container">
+            <!--Navbar-->
+            <div class="navbar-container">
+                <h1 class="title"> Weather App </h1>
+                <!-- Search input bar (for all screens) -->
+                <div class="weather-input-container" id="desktopSearch">
+                    <input id="searchInput" class="search-input" type="text" placeholder="Enter City" />
+                    <i id="searchButton" class="search-icon fa-solid fa-magnifying-glass"></i> 
+                </div>
+            </div>
+            <div class="vertical-align-container">
+                <div class="weather-image-container">
+                    <!-- Search Image -->
+                     <div id="searchImageContainer">
+                        <img id="weatherDesktopImg" class="search-desktop" src='./search-desktop.png' />
+                        <img id='weatherMobileImg' class="search-mobile" src="./search-mobile.png" />
+                     </div>
+
+                    <!-- 404 Not Found -->
+                     <div id="notFoundImageContainer">
+                        <img id='errorMobileImg' class="search-mobile" src="./error-mobile.png" />
+                        <img id='errorDesktopImg' class="search-desktop" src="./error-desktop.png"/>
+                     </div>
+                </div>
+                <div class="weather-content-container">
+                    <!-- current weather details -->
+                    <div class="weather-details-card card-glass animate-in">
+                        <h1 class="city-name"> Hyderabad </h1>
+                        <div class="date-time-container">
+                            <p id="date"> 25 April 2025 </p>
+                            <p id="time"> 11:16 AM </p>
+                        </div>
+                        <div class="weather-condition-container">
+                            <img id="weatherConditionImg" src='https://openweathermap.org/img/wn/04d@2x.png' />
+                            <p id="weatherCondition"> Partly Cloudy </p>
+                        </div>
+                        <h1 class='temperature'> 32°C<h1>
+                        <div class="parameters-align">
+                            <div class="horizontal-align">
+                                <span class="material-symbols-outlined white-icon"> humidity_low </span>
+                                <p class='atmospheric-parameter'> Humidity: <span id="humidityValue"> 12 </span> % </p>
+                            </div>
+
+                            <div class="horizontal-align">
+                                <span class="material-symbols-outlined white-icon"> show_chart </span>
+                                <p class='atmospheric-parameter'> Pressure: <span id="pressureValue"> 1013 </span> hPa </p>
+                            </div>
+                        
+                        
+                            <div class="horizontal-align">
+                                <span class="material-symbols-outlined white-icon"> wb_sunny </span>
+                                <p class='atmospheric-parameter'> UV Index: <span id="uvValue"> 7 </span> </p>
+                            </div>
+
+                            <div class="horizontal-align">
+                                <span class="material-symbols-outlined white-icon"> mist </span>
+                                <p class='atmospheric-parameter'> AQI: <span id="aqiValue"> 180 </span> </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- other details -->
+                    <div class="other-details-container">
+                        <div class="temp-container card-glass animate-in">
+                            <div class="horizontal-align-space">
+                                <p> Feels Like </p>
+                                <p> <span id="feelsLikeValue"> 35 </span> °C </p>
+                            </div>
+                            <hr class="forecast-divider" />
+                            <div class="horizontal-align-space">
+                                <p> Min </p>
+                                <p> <span id="minTemp"> 30 </span> °C </p>
+                            </div>
+                            <div class="horizontal-align-space">
+                                <p> Max </p>
+                                <p> <span id="maxTemp"> 34 </span> °C </p>
+                            </div>
+                        </div>
+                        <div class="temp-container card-glass animate-in">
+                            <div class="horizontal-align-space">
+                                <p> Sunrise </p>
+                                <p id="sunriseTime"> 5:52 AM </p>
+                            </div>
+                            <div class="horizontal-align-space">
+                                <p> Sunset </p>
+                                <p id="sunsetTime"> 06:37 PM </p>
+                            </div>
+                            <hr class="forecast-divider" />
+                            <div class="horizontal-align-space">
+                                <p> 🌬️ Wind Speed: </p>
+                                <p> <span id="windSpeed"> 5.5 </span> m/s </p>
+                            </div>
+                            <div class="horizontal-align-space">
+                                <p> 🧭 Wind Direction: </p>
+                                <p> <span id="windDirection"> 135 </span> ° </p>
+                            </div>
+                            <div class="horizontal-align-space">
+                                <p> 💨 Wind Gust: </p>
+                                <p> <span id="windGust"> 9.3 </span> m/s </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- forecast -->
+                    <div class="forecast-container card-glass animate-in">
+                        <h3> Forecast </h3>
+                        <div class="each-forecast-container">
+                            <img id="dayOneImg" class="forecast-image" src='https://openweathermap.org/img/wn/04d@2x.png' />
+                            <div class="vertical-align">
+                                <div class="white-font horizontal-align-space">
+                                    <p id="dayOneDay"> Fri </p>
+                                    <p id="dayOneTemp"> 33°C </p>
+                                </div>
+                                <div class="tertiary-font horizontal-align-space">
+                                    <p> Min: <span id="dayOneMin"></span>33</span>°C </p>
+                                    <p> Max: <span id="dayOneMax">24</span>°C </p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="forecast-divider" />
+                        <div class="each-forecast-container">
+                            <img id="dayTwoImg" class="forecast-image" src='https://openweathermap.org/img/wn/04d@2x.png' />
+                            <div class="vertical-align">
+                                <div class="white-font horizontal-align-space">
+                                    <p id="dayTwoDay"> Fri </p>
+                                    <p id="dayTwoTemp"> 33°C </p>
+                                </div>
+                                <div class="tertiary-font horizontal-align-space">
+                                    <p> Min: <span id="dayTwoMin">33</span>°C </p>
+                                    <p> Max: <span id="dayTwoMax">24</span>°C </p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="forecast-divider" />
+                        <div class="each-forecast-container">
+                            <img id="dayThreeImg" class="forecast-image" src='https://openweathermap.org/img/wn/04d@2x.png' />
+                            <div class="vertical-align">
+                                <div class="white-font horizontal-align-space">
+                                    <p id="dayThreeDay" > Fri </p>
+                                    <p id="dayThreeTemp"> 33°C </p>
+                                </div>
+                                <div class="tertiary-font horizontal-align-space">
+                                    <p> Min: <span id="dayThreeMin">33</span>°C </p>
+                                    <p> Max: <span id="dayThreeMax">24</span>°C </p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="forecast-divider" />
+                        <div class="each-forecast-container">
+                            <img id="dayFourImg" class="forecast-image" src='https://openweathermap.org/img/wn/04d@2x.png' />
+                            <div class="vertical-align">
+                                <div class="white-font horizontal-align-space">
+                                    <p id="dayFourDay"> Fri </p>
+                                    <p id="dayFourTemp"> 33°C </p>
+                                </div>
+                                <div class="tertiary-font horizontal-align-space">
+                                    <p> Min: <span id="dayFourMin">33</span>°C </p>
+                                    <p> Max: <span id="dayFourMax">24</span>°C </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
