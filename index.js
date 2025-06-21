@@ -70,6 +70,7 @@ function showErrorImage(){
 
 searchBtnEl.addEventListener('click', async () => {
     searchWeatherImageCont.style.display = 'none';
+    notFoundImageCont.style.display = 'none';
     weatherContentContainer.style.display = 'flex';
     try {
         console.log('button clicked');
