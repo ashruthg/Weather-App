@@ -146,10 +146,14 @@ body{
   padding: 1rem;
   width: 100%;
   max-width: 700px;
+  /* border: 1px solid red; */
 }
 
 #notFoundImageContainer{
     display: none;
+    width: 100%;
+    /* border: 1px solid black; */
+    margin: auto;
 }
 
 .search-desktop {
@@ -164,13 +168,15 @@ body{
 
 .search-mobile {
   display: none;
+  margin: auto;
 }
 
 @media screen and (max-width: 730px) {
   .weather-image-container {
-    flex-direction: column;
+    /* flex-direction: column; */
     width: 100%;
     padding: 0.5rem;
+    /* margin: auto; */
   }
 
   .search-desktop {
