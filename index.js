@@ -66,12 +66,11 @@ const day4MaxTempEl = document.getElementById('dayFourMax');
 function showErrorImage(){
     notFoundImageCont.style.display = 'block';
     weatherContentContainer.style.display = 'none';
+    searchWeatherImageCont.style.display = 'none';
 }
 
 searchBtnEl.addEventListener('click', async () => {
-    searchWeatherImageCont.style.display = 'none';
-    notFoundImageCont.style.display = 'none';
-    weatherContentContainer.style.display = 'flex';
+    
     try {
         console.log('button clicked');
         const city = inputEl.value.trim();
@@ -273,9 +272,13 @@ searchBtnEl.addEventListener('click', async () => {
                 day4TempEl.textContent = day4Temp;
                 day4MinTempEl.textContent = day4MinTemp;
                 day4MaxTempEl.textContent = day4MaxTemp;
+
+                searchWeatherImageCont.style.display = 'none';
+                notFoundImageCont.style.display = 'none';
+                weatherContentContainer.style.display = 'flex';
             } catch (innerErr) {
                 console.error('Inner Error ➡️', innerErr);
-                // showErrorImage();
+                showErrorImage();
             }
 
         } else if (weatherResponse.status === 404) {
