@@ -1,5 +1,5 @@
 const apiKey = 'ac925d5c75ac4e56a720eeec6e15e35f';
-const weatherbitAPIKey = '90c637b8d151450687355bdb822cf790'
+
 //Navbar Items
 const inputEl = document.getElementById('searchInput');
 const searchBtnEl = document.getElementById('searchButton');
@@ -128,12 +128,14 @@ searchBtnEl.addEventListener('click', async () => {
             try {
                 // Forecast & AQI (pollution) API URLs
                 const pollutionUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-                const weatherbitForecastUrl = `https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&key=${weatherbitAPIKey}&days=5`;
+                const openWeatherForecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+                const openWeatherUVUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily,alerts&units=metric&appid=${apiKey}`;
+
 
                 // Run both API calls in parallel
                 const [pollutionResponse, forecastResponse] = await Promise.all([
                     fetch(pollutionUrl),
-                    fetch(weatherbitForecastUrl)
+                    fetch(openWeatherForecastUrl),
                 ]);
 
                 if (!pollutionResponse.ok || !forecastResponse.ok) {
@@ -153,9 +155,60 @@ searchBtnEl.addEventListener('click', async () => {
                 //At this point, ALL 3 responses are successful.
                 const {aqi} = pollutionData.list[0].main; //Destructure AQI from Pollution Data
                 console.log('aqi is', aqi);
-                console.log('forecast data obj is ', forecastData);
+                console.log('forecast data obj is ➡️', forecastData);
 
-                const currentdayUV = forecastData.data[0].uv; //UV Index of the current day
+
+                const forecastDataList = forecastData.list;
+
+                const todayDate = new Date();
+                const formattedToday = todayDate.toISOString().split('T')[0];
+
+                const fourDayforecastData = [];
+
+                for (let i = 1; i < 5; i++) {
+                    let date = '';
+                    let icons = [];
+                    let temps = [];
+                    let minTemps = [];
+                    let maxTemps = [];
+
+                    forecastDataList.forEach(item => {
+                        // Create a new Date object for the ith day
+                        let otherDate = new Date(todayDate);
+                        otherDate.setDate(todayDate.getDate() + i);
+                        let formattedOtherDate = otherDate.toISOString().split('T')[0];
+
+                        let itemDate = item.dt_txt.split(' ')[0];
+
+                        if (formattedOtherDate === itemDate) {
+                            date = itemDate;
+                            icons.push(item.weather[0].icon);
+                            temps.push(item.main.temp);
+                            minTemps.push(item.main.temp_min);
+                            maxTemps.push(item.main.temp_max);
+                        }
+                    });
+
+                    // average of array
+                    const avg = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+
+                    // to pick most frequent icon
+                    const mostFrequentIcon = icons.sort((a, b) =>
+                        icons.filter(v => v === a).length - icons.filter(v => v === b).length
+                    ).pop();
+
+                    const dayDetails = { //this is the object of each ith day details
+                        date,
+                        icon: mostFrequentIcon || '',
+                        temp: temps.length ? Math.round(avg(temps)) : '',
+                        min_temp: minTemps.length ? Math.round(avg(minTemps)) : '',
+                        max_temp: maxTemps.length ? Math.round(avg(maxTemps)) : ''
+                    };
+
+                    fourDayforecastData.push(dayDetails);
+                }
+
+                // const currentdayUV = forecastData.data[0].uv; //UV Index of the current day
 
                 function getDay(dateStr) {
                     const date = new Date(dateStr); // create a date object
@@ -165,13 +218,13 @@ searchBtnEl.addEventListener('click', async () => {
                 //Forecast Data of the following 4 days
 
                 //Day 1 Forecast
-                const day1ImageIcon = forecastData.data[1].weather.icon;
-                const day1ImageUrl = `https://www.weatherbit.io/static/img/icons/${day1ImageIcon}.png`;
-                const day1Date = forecastData.data[1].valid_date;
+                const day1ImageIcon = fourDayforecastData[0].icon;
+                const day1ImageUrl = `https://openweathermap.org/img/wn/${day1ImageIcon}@2x.png`;
+                const day1Date = fourDayforecastData[0].date;
                 const day1Day = getDay(day1Date);
-                const day1Temp = Math.round(forecastData.data[1].temp)+'°C';
-                const day1MinTemp = Math.round(forecastData.data[1].min_temp);
-                const day1MaxTemp = Math.round(forecastData.data[1].max_temp);
+                const day1Temp = Math.round(fourDayforecastData[0].temp)+'°C';
+                const day1MinTemp = Math.round(fourDayforecastData[0].min_temp);
+                const day1MaxTemp = Math.round(fourDayforecastData[0].max_temp);
                 
                 console.log('day 1 day is ', day1Day);
                 console.log('day 1 Temp is ', day1Temp);
@@ -179,13 +232,14 @@ searchBtnEl.addEventListener('click', async () => {
                 console.log('day 1 max temp is ', day1MaxTemp);
 
                 //Day 2 Forecast
-                const day2ImageIcon = forecastData.data[2].weather.icon;
-                const day2ImageUrl = `https://www.weatherbit.io/static/img/icons/${day2ImageIcon}.png`;
-                const day2Date = forecastData.data[2].valid_date;
+                const day2ImageIcon = fourDayforecastData[1].icon;
+                const day2ImageUrl = `https://openweathermap.org/img/wn/${day2ImageIcon}@2x.png`;
+                const day2Date = fourDayforecastData[1].date;
                 const day2Day = getDay(day2Date);
-                const day2Temp = Math.round(forecastData.data[2].temp)+'°C';
-                const day2MinTemp = Math.round(forecastData.data[2].min_temp);
-                const day2MaxTemp = Math.round(forecastData.data[2].max_temp);
+                const day2Temp = Math.round(fourDayforecastData[1].temp)+'°C';
+                const day2MinTemp = Math.round(fourDayforecastData[1].min_temp);
+                const day2MaxTemp = Math.round(fourDayforecastData[1].max_temp);
+
                 
                 console.log('day 2 day is ', day2Day);
                 console.log('day 2 Temp is ', day2Temp);
@@ -193,13 +247,14 @@ searchBtnEl.addEventListener('click', async () => {
                 console.log('day 2 max temp is ', day2MaxTemp);
 
                 //Day 3 Forecast
-                const day3ImageIcon = forecastData.data[3].weather.icon;
-                const day3ImageUrl = `https://www.weatherbit.io/static/img/icons/${day3ImageIcon}.png`;
-                const day3Date = forecastData.data[3].valid_date;
+                const day3ImageIcon = fourDayforecastData[2].icon;
+                const day3ImageUrl = `https://openweathermap.org/img/wn/${day3ImageIcon}@2x.png`;
+                const day3Date = fourDayforecastData[2].date;
                 const day3Day = getDay(day3Date);
-                const day3Temp = Math.round(forecastData.data[3].temp)+'°C';
-                const day3MinTemp = Math.round(forecastData.data[3].min_temp);
-                const day3MaxTemp = Math.round(forecastData.data[3].max_temp);
+                const day3Temp = Math.round(fourDayforecastData[2].temp)+'°C';
+                const day3MinTemp = Math.round(fourDayforecastData[2].min_temp);
+                const day3MaxTemp = Math.round(fourDayforecastData[2].max_temp);
+
                 
                 console.log('day 3 day is ', day3Day);
                 console.log('day 3 Temp is ', day3Temp);
@@ -207,14 +262,14 @@ searchBtnEl.addEventListener('click', async () => {
                 console.log('day 3 max temp is ', day3MaxTemp);
 
                 //Day 4 Forecast
-                const day4ImageIcon = forecastData.data[4].weather.icon;
-                const day4ImageUrl = `https://www.weatherbit.io/static/img/icons/${day4ImageIcon}.png`;
-                const day4Date = forecastData.data[4].valid_date;
+                const day4ImageIcon = fourDayforecastData[3].icon;
+                const day4ImageUrl = `https://openweathermap.org/img/wn/${day4ImageIcon}@2x.png`;
+                const day4Date = fourDayforecastData[3].date;
                 const day4Day = getDay(day4Date);
-                const day4Temp = Math.round(forecastData.data[4].temp)+'°C';
-                const day4MinTemp = Math.round(forecastData.data[4].min_temp);
-                const day4MaxTemp = Math.round(forecastData.data[4].max_temp);
-                
+                const day4Temp = Math.round(fourDayforecastData[3].temp)+'°C';
+                const day4MinTemp = Math.round(fourDayforecastData[3].min_temp);
+                const day4MaxTemp = Math.round(fourDayforecastData[3].max_temp);
+
                 console.log('day 4 day is ', day4Day);
                 console.log('day 4 Temp is ', day4Temp);
                 console.log('day 4 min temp is ', day4MinTemp);
@@ -231,7 +286,7 @@ searchBtnEl.addEventListener('click', async () => {
                 //Update weather Parameters Items
                 humidityEl.textContent = humidity;
                 pressureEl.textContent = pressure;
-                uvIndexEl.textContent = currentdayUV;
+                // uvIndexEl.textContent = currentdayUV;
                 aqiEl.textContent = aqi;
 
                 //Update Temperature Elements Values
